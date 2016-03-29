@@ -35,12 +35,12 @@ $ns = array(
 );
 
 if ($res['code']==1000) {
-	$obj = "domain";
+	$obj = "nameserver";
 	$meth = "list";
 	$params = array();
 	$res = $domrobot->call($obj,$meth,$params);
-    foreach($res['resData']['domain'] as $domain) {
-        $domrobot->call('nameserver', 'update', array('domain' => $domain, 'ns' => $ns));
+    foreach($res['resData']['domains'] as $domain) {
+        $domrobot->call('nameserver', 'update', array('domain' => $domain['domain'], 'ns' => $ns));
     }
 } else {
 	print_r($res);
