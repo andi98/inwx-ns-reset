@@ -12,24 +12,36 @@ header('Content-type: text/plain; charset=utf-8');
 error_reporting(E_ALL);
 require "INWX/Domrobot.php";
 
-//$addr = "https://api.domrobot.com/xmlrpc/";
+$addr = "https://api.domrobot.com/xmlrpc/";
 //$addr = "https://api.ote.domrobot.com/xmlrpc/";
 
-$usr = "your_username";
-$pwd = "your_password";
+$usr = "USERNAME";
+$pwd = "PASSWORT";
 
 $domrobot = new INWX\Domrobot($addr);
 $domrobot->setDebug(false);
 $domrobot->setLanguage('en');
 $res = $domrobot->login($usr,$pwd);
 
+//optional bei aktiviert 2fa
+//$res = $domrobot->call('account', 'unlock', array('tan' => 123456));
+
+$ns = array(
+'ns.inwx.de',
+'ns2.inwx.de',
+'ns3.inwx.eu',
+'ns4.inwx.com',
+'ns5.inwx.net'
+);
+
 if ($res['code']==1000) {
 	$obj = "domain";
-	$meth = "check";
+	$meth = "list";
 	$params = array();
-	$params['domain'] = "mydomain.com";
 	$res = $domrobot->call($obj,$meth,$params);
-	print_r($res);
+    foreach($res['resData']['domain'] as $domain) {
+        $domrobot->call('nameserver', 'update', array('domain' => $domain, 'ns' => $ns));
+    }
 } else {
 	print_r($res);
 }
