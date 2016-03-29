@@ -37,7 +37,7 @@ $ns = array(
 if ($res['code']==1000) {
 	$obj = "nameserver";
 	$meth = "list";
-	$params = array();
+	$params = array('pagelimit' => 999999);
 	$res = $domrobot->call($obj,$meth,$params);
     foreach($res['resData']['domains'] as $domain) {
         $domrobot->call('nameserver', 'update', array('domain' => $domain['domain'], 'ns' => $ns));
